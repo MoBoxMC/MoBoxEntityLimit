@@ -1,0 +1,29 @@
+name: MoBoxEntityLimit
+version: 1.0-SNAPSHOT
+main: org.mossmc.mosscg.MoBoxEntityLimit.Main
+author: MossCG
+description: A plugin by MossCG for MoBoxMC.
+commands:
+  moboxentitylimit:
+    description: 主指令
+  mbel:
+    description: 主指令缩写
+permissions:
+  moboxentitylimit.help:
+    description: 查看插件帮助权限
+    default: op
+  moboxentitylimit.debug:
+    description: 开关debug模式权限
+    default: op
+  moboxentitylimit.kill:
+    description: 清除生物权限
+    default: op
+  moboxentitylimit.count:
+    description: 统计生物权限
+    default: op
+  moboxentitylimit.list:
+    description: 查看检查列表权限
+    default: op
+  moboxentitylimit.reload:
+    description: 重载插件权限
+    default: op

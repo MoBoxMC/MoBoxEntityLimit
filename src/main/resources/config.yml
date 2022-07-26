@@ -1,0 +1,37 @@
+#MoBoxEntityLimit By MossCG
+#插件配置文件
+
+#是否启用实体计时删除任务
+#此任务只会计算插件启用后新生成的实体
+enableAliveTimeTask: true
+#每次检查间隔时间（单位：Tick）
+aliveTimeCheckDelay: 20
+#实体存活时间，到这个时间就会被删除（单位：秒）
+#生物名称请尽量使用全大写，参考 https://bukkit.windit.net/javadoc/org/bukkit/entity/EntityType.html
+#请使用json格式书写string
+entityAliveTime: "{
+FIREBALL:10,
+WITHER_SKULL:10,
+SNOWBALL:10,
+SMALL_FIREBALL:10
+}"
+
+#是否启用实体存活定时清除任务
+#此任务会遍历所有实体，间隔时间可以较长
+enableAliveTickTask: true
+#每次检查间隔时间（单位：Tick）
+aliveTickCheckDelay: 60
+#实体存活时间，存活到了这个时间检测到就会删除（单位：Tick）
+#生物名称请尽量使用全大写，参考 https://bukkit.windit.net/javadoc/org/bukkit/entity/EntityType.html
+#请使用json格式书写string
+entityAliveTick: "{
+FIREBALL:200,
+WITHER_SKULL:200,
+SNOWBALL:200,
+SMALL_FIREBALL:200
+}"
+
+#Debug模式
+#此模式开启的话会显示很多报错
+#你也可以用/mbel debug指令开启
+debug: false
