@@ -10,9 +10,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class CacheEntity {
-    public static Map<Entity,Long> entityMap = new HashMap<>();
+    public static ConcurrentHashMap<Entity,Long> entityMap = new ConcurrentHashMap<>();
 
     public static Map<EntityType,Long> entityTimeMap = new HashMap<>();
     public static List<EntityType> entityTimeTypeList = new ArrayList<>();

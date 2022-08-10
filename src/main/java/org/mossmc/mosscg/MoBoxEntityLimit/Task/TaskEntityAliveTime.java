@@ -14,33 +14,46 @@ import java.util.List;
 public class TaskEntityAliveTime {
     public static BukkitTask task;
     public static void runTask() {
-        task = new BukkitRunnable() {
-            @Override
-            public void run() {
-                if (CacheEntity.entityMap.size() > 0) {
-                    List<Entity> killList = new ArrayList<>();
-                    CacheEntity.entityMap.forEach((entity, time) -> {
-                        try {
-                            if (time + CacheEntity.entityTimeMap.get(entity.getType()) < System.currentTimeMillis()) {
-                                killList.add(entity);
-                            }
-                        } catch (Exception e) {
-                            if (BasicInfo.debug) {
-                                e.printStackTrace();
-                            }
-                        }
-                    });
-                    if (killList.size() > 0) {
-                        killList.forEach(entity -> {
-                            CacheEntity.entityMap.remove(entity);
-                            entity.remove();
-                        });
-                        if (BasicInfo.debug) {
-                            Main.logger.info(ChatColor.GREEN+"本次定时清除，清除了"+killList.size()+"个实体！");
-                        }
+        if (Main.getConfig.getBoolean("asyncTask")) {
+            task = new BukkitRunnable() {
+                @Override
+                public void run() {
+                    taskVoid();
+                }
+            }.runTaskTimerAsynchronously(Main.instance, Main.getConfig.getLong("aliveTimeCheckDelay"),Main.getConfig.getLong("aliveTimeCheckDelay"));
+        } else {
+            task = new BukkitRunnable() {
+                @Override
+                public void run() {
+                    taskVoid();
+                }
+            }.runTaskTimer(Main.instance, Main.getConfig.getLong("aliveTimeCheckDelay"),Main.getConfig.getLong("aliveTimeCheckDelay"));
+        }
+    }
+
+    public static void taskVoid() {
+        if (CacheEntity.entityMap.size() > 0) {
+            List<Entity> killList = new ArrayList<>();
+            CacheEntity.entityMap.forEach((entity, time) -> {
+                try {
+                    if (time + CacheEntity.entityTimeMap.get(entity.getType()) < System.currentTimeMillis()) {
+                        killList.add(entity);
+                    }
+                } catch (Exception e) {
+                    if (BasicInfo.debug) {
+                        e.printStackTrace();
                     }
                 }
+            });
+            if (killList.size() > 0) {
+                killList.forEach(entity -> {
+                    CacheEntity.entityMap.remove(entity);
+                    entity.remove();
+                });
+                if (BasicInfo.debug) {
+                    Main.logger.info(ChatColor.GREEN+"本次定时清除，清除了"+killList.size()+"个实体！");
+                }
             }
-        }.runTaskTimerAsynchronously(Main.instance, Main.getConfig.getLong("aliveTimeCheckDelay"),Main.getConfig.getLong("aliveTimeCheckDelay"));
+        }
     }
 }

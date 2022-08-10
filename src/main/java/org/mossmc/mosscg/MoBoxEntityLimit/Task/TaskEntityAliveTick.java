@@ -13,30 +13,43 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class TaskEntityAliveTick {
     public static BukkitTask task;
     public static void runTask() {
-        task = new BukkitRunnable() {
-            @Override
-            public void run() {
-                AtomicInteger count = new AtomicInteger();
-                Bukkit.getWorlds().forEach(world -> {
-                    try {
-                        world.getEntities().forEach(entity -> {
-                            if (CacheEntity.entityTickTypeList.contains(entity.getType())) {
-                                if (entity.getTicksLived() >= CacheEntity.entityTickMap.get(entity.getType())) {
-                                    entity.remove();
-                                    count.getAndIncrement();
-                                }
-                            }
-                        });
-                    } catch (Exception e) {
-                        if (BasicInfo.debug) {
-                            e.printStackTrace();
+        if (Main.getConfig.getBoolean("asyncTask")) {
+            task = new BukkitRunnable() {
+                @Override
+                public void run() {
+                    taskVoid();
+                }
+            }.runTaskTimerAsynchronously(Main.instance, Main.getConfig.getLong("aliveTickCheckDelay"), Main.getConfig.getLong("aliveTickCheckDelay"));
+        } else {
+            task = new BukkitRunnable() {
+                @Override
+                public void run() {
+                    taskVoid();
+                }
+            }.runTaskTimer(Main.instance, Main.getConfig.getLong("aliveTickCheckDelay"), Main.getConfig.getLong("aliveTickCheckDelay"));
+        }
+    }
+
+    public static void taskVoid() {
+        AtomicInteger count = new AtomicInteger();
+        Bukkit.getWorlds().forEach(world -> {
+            try {
+                world.getEntities().forEach(entity -> {
+                    if (CacheEntity.entityTickTypeList.contains(entity.getType())) {
+                        if (entity.getTicksLived() >= CacheEntity.entityTickMap.get(entity.getType())) {
+                            entity.remove();
+                            count.getAndIncrement();
                         }
                     }
                 });
+            } catch (Exception e) {
                 if (BasicInfo.debug) {
-                    Main.logger.info(ChatColor.GREEN+"本次定时清除，清除了"+count.get()+"个实体！");
+                    e.printStackTrace();
                 }
             }
-        }.runTaskTimerAsynchronously(Main.instance, Main.getConfig.getLong("aliveTickCheckDelay"),Main.getConfig.getLong("aliveTickCheckDelay"));
+        });
+        if (BasicInfo.debug) {
+            Main.logger.info(ChatColor.GREEN+"本次定时清除，清除了"+count.get()+"个实体！");
+        }
     }
 }

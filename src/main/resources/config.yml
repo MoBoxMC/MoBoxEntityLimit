@@ -1,6 +1,10 @@
 #MoBoxEntityLimit By MossCG
 #插件配置文件
 
+#是否异步操作任务
+#高版本好像不支持，如果报错就别开
+asyncTask: false
+
 #是否启用实体计时删除任务
 #此任务只会计算插件启用后新生成的实体
 enableAliveTimeTask: true
